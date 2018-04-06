@@ -31,6 +31,7 @@ export function setUseProxies(value) {
     useProxies = value
 }
 
+// 是否可以使用 proxy
 export function getUseProxies() {
     return useProxies
 }
@@ -39,10 +40,13 @@ export function isProxy(value) {
     return !!value && !!value[PROXY_STATE]
 }
 
+// 能否能被 proxy 化
 export function isProxyable(value) {
     if (!value) return false
     if (typeof value !== "object") return false
     if (Array.isArray(value)) return true
+    // 给定对象的原型。如果没有继承属性，则返回 null
+    // Object.getPrototypeOf(Object.create(null))
     const proto = Object.getPrototypeOf(value)
     return proto === null || proto === Object.prototype
 }
@@ -75,6 +79,7 @@ export function has(thing, prop) {
 
 // given a base object, returns it if unmodified, or return the changed cloned if modified
 export function finalize(base) {
+    // 判断是否是 proxy
     if (isProxy(base)) {
         const state = base[PROXY_STATE]
         if (state.modified === true) {
